@@ -9,6 +9,41 @@ const draw = () => {
   drawTetromino();
 };
 
+const moveDown = () => {
+  tetris.moveTetrominoDown();
+  draw();
+};
+
+const moveLeft = () => {
+  tetris.moveTetrominoLeft();
+  draw();
+};
+
+const moveRight = () => {
+  tetris.moveTetrominoRight();
+  draw();
+};
+
+const onKeydown = (event) => {
+  switch (event.key) {
+    case 'ArrowDown':
+      moveDown();
+      break;
+    case 'ArrowLeft':
+      moveLeft();
+      break;
+    case 'ArrowRight':
+      moveRight();
+      break;
+    default:
+      break;
+  }
+};
+
+const initKeydown = () => {
+  document.addEventListener('keydown', onKeydown);
+};
+
 const drawTetromino = () => {
   const name = tetris.tetromino.name;
   const tetrominoMatrixSize = tetris.tetromino.matrix.length;
@@ -25,4 +60,5 @@ const drawTetromino = () => {
   }
 };
 
+initKeydown();
 draw();

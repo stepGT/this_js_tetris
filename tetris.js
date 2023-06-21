@@ -32,4 +32,16 @@ export class Tetris {
       ghostRow: row,
     };
   }
+
+  moveTetrominoDown() {
+    this.tetromino.row += 1;
+  }
+
+  moveTetrominoLeft() {
+    this.tetromino.column -= 1;
+  }
+
+  moveTetrominoRight() {
+    this.tetromino.column += 1;
+  }
 }
