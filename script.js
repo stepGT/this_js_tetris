@@ -1,12 +1,24 @@
 import { Tetris } from './tetris.js';
-import { convertPositionToIndex } from './utils.js';
+import { convertPositionToIndex, PLAYFIELD_COLS, PLAYFIELD_ROWS } from './utils.js';
 
 const tetris = new Tetris();
 const cells = document.querySelectorAll('.grid>div');
 //
 const draw = () => {
   cells.forEach((cell) => cell.removeAttribute('class'));
+  drawPlayfield();
   drawTetromino();
+};
+
+const drawPlayfield = () => {
+  for (let row = 0; row < PLAYFIELD_ROWS; row++) {
+    for (let column = 0; column < PLAYFIELD_COLS; column++) {
+      if (!tetris.playfield[row][column]) continue;
+      const name = tetris.playfield[row][column];
+      const cellIndex = convertPositionToIndex(row, column);
+      cells[cellIndex].classList.add(name);
+    }
+  }
 };
 
 const moveDown = () => {
