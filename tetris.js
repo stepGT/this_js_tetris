@@ -106,6 +106,36 @@ export class Tetris {
           this.tetromino.name;
       }
     }
+    this.processFilledRows();
     this.generateTetromino();
+  }
+
+  processFilledRows() {
+    const filledLines = this.findFilledRows();
+    this.removeFilledRows(filledLines);
+  }
+
+  findFilledRows() {
+    const filledRows = [];
+    //
+    for (let row = 0; row < PLAYFIELD_ROWS; row++) {
+      if (this.playfield[row].every((cell) => Boolean(cell))) {
+        filledRows.push(row);
+      }
+    }
+    return filledRows;
+  }
+
+  removeFilledRows(filledRows) {
+    filledRows.forEach((row) => {
+      this.dropRowsAbove(row);
+    });
+  }
+
+  dropRowsAbove(rowToDelete) {
+    for (let row = rowToDelete; row > 0; row--) {
+      this.playfield[row] = this.playfield[row - 1];
+    }
+    this.playfield[0] = new Array(PLAYFIELD_COLS).fill(0);
   }
 }
