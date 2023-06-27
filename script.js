@@ -1,6 +1,8 @@
 import { Tetris } from './tetris.js';
 import { convertPositionToIndex, PLAYFIELD_COLS, PLAYFIELD_ROWS } from './utils.js';
 
+let timeoutID;
+let requestID;
 const tetris = new Tetris();
 const cells = document.querySelectorAll('.grid>div');
 //
@@ -21,9 +23,20 @@ const drawPlayfield = () => {
   }
 };
 
+const startLoop = () => {
+  timeoutID = setTimeout(() => (requestID = requestAnimationFrame(moveDown)), 700);
+};
+
+const stopLoop = () => {
+  cancelAnimationFrame(requestID);
+  clearTimeout(timeoutID);
+};
+
 const moveDown = () => {
   tetris.moveTetrominoDown();
   draw();
+  stopLoop();
+  startLoop();
 };
 
 const moveLeft = () => {
@@ -81,4 +94,4 @@ const drawTetromino = () => {
 };
 
 initKeydown();
-draw();
+moveDown();
