@@ -1,5 +1,5 @@
 import { Tetris } from './tetris.js';
-import { convertPositionToIndex, PLAYFIELD_COLS, PLAYFIELD_ROWS } from './utils.js';
+import { convertPositionToIndex, PLAYFIELD_COLS, PLAYFIELD_ROWS, SAD } from './utils.js';
 
 let timeoutID;
 let requestID;
@@ -32,11 +32,42 @@ const stopLoop = () => {
   clearTimeout(timeoutID);
 };
 
+const drawSad = () => {
+  const TOP_OFFSET = 5;
+  for (let row = 0; row < SAD.length; row++) {
+    for (let column = 0; column < SAD[0].length; column++) {
+      if (!SAD[row][column]) continue;
+      const cellIndex = convertPositionToIndex(TOP_OFFSET + row, column);
+      cells[cellIndex].classList.add('sad');
+    }
+  }
+};
+
+const gameOverAnimation = () => {
+  const filledCells = [...cells].filter((cell) => cell.classList.length > 0);
+  filledCells.forEach((cell, i) => {
+    setTimeout(() => cell.classList.add('hide'), i * 10);
+    setTimeout(() => cell.removeAttribute('class'), i * 10 + 500);
+  });
+
+  setTimeout(drawSad, filledCells.length * 10 + 1000);
+};
+
+const gameOver = () => {
+  stopLoop();
+  document.removeEventListener('keydown', onKeydown);
+  gameOverAnimation();
+};
+
 const moveDown = () => {
   tetris.moveTetrominoDown();
   draw();
   stopLoop();
   startLoop();
+  //
+  if (tetris.isGameOver) {
+    gameOver();
+  }
 };
 
 const moveLeft = () => {
