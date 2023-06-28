@@ -39,6 +39,23 @@ export class Tetris {
       ghostColumn: column,
       ghostRow: row,
     };
+    this.calculateGhostPosition();
+  }
+
+  calculateGhostPosition() {
+    const tetrominoRow = this.tetromino.row;
+    this.tetromino.row++;
+    while (this.isValid()) {
+      this.tetromino.row++;
+    }
+    this.tetromino.ghostRow = this.tetromino.row - 1;
+    this.tetromino.ghostColumn = this.tetromino.column;
+    this.tetromino.row = tetrominoRow;
+  }
+
+  dropTetrominoDown() {
+    this.tetromino.row = this.tetromino.ghostRow;
+    this.placeTetromino();
   }
 
   moveTetrominoDown() {
@@ -53,6 +70,8 @@ export class Tetris {
     this.tetromino.column -= 1;
     if (!this.isValid()) {
       this.tetromino.column += 1;
+    } else {
+      this.calculateGhostPosition();
     }
   }
 
@@ -60,6 +79,8 @@ export class Tetris {
     this.tetromino.column += 1;
     if (!this.isValid()) {
       this.tetromino.column -= 1;
+    } else {
+      this.calculateGhostPosition();
     }
   }
 
@@ -69,6 +90,8 @@ export class Tetris {
     this.tetromino.matrix = rotatedMatrix;
     if (!this.isValid()) {
       this.tetromino.matrix = oldMatrix;
+    } else {
+      this.calculateGhostPosition();
     }
   }
 

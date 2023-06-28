@@ -6,10 +6,28 @@ let requestID;
 const tetris = new Tetris();
 const cells = document.querySelectorAll('.grid>div');
 //
+
+const drawGhostTetromino = () => {
+  const tetrominoMatrixSize = tetris.tetromino.matrix.length;
+  //
+  for (let row = 0; row < tetrominoMatrixSize; row++) {
+    for (let column = 0; column < tetrominoMatrixSize; column++) {
+      if (!tetris.tetromino.matrix[row][column]) continue;
+      if (tetris.tetromino.ghostRow + row < 0) continue;
+      const cellIndex = convertPositionToIndex(
+        tetris.tetromino.ghostRow + row,
+        tetris.tetromino.ghostColumn + column,
+      );
+      cells[cellIndex].classList.add('ghost');
+    }
+  }
+};
+
 const draw = () => {
   cells.forEach((cell) => cell.removeAttribute('class'));
   drawPlayfield();
   drawTetromino();
+  drawGhostTetromino();
 };
 
 const drawPlayfield = () => {
@@ -85,6 +103,17 @@ const rotate = () => {
   draw();
 };
 
+const dropDown = () => {
+  tetris.dropTetrominoDown();
+  draw();
+  stopLoop();
+  startLoop();
+
+  if (tetris.isGameOver) {
+    gameOver();
+  }
+};
+
 const onKeydown = (event) => {
   switch (event.key) {
     case 'ArrowUp':
@@ -99,6 +128,8 @@ const onKeydown = (event) => {
     case 'ArrowRight':
       moveRight();
       break;
+    case ' ':
+      dropDown();
     default:
       break;
   }
